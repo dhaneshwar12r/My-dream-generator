@@ -1,0 +1,38 @@
+<!-- index.html (Updated for no-login access) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Generation</title>
+  <link rel="stylesheet" href="main.a481d52a.chunk.css">
+  <link rel="stylesheet" href="2.c4ef30b7.chunk.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // Force login state for unlimited access
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('user', JSON.stringify({ phone: 'guest', access: 'unlimited' }));
+  </script>
+
+  <!-- Removed login checks from main JS files -->
+  <script>
+    // Override fetch/login functions if defined in JS bundles
+    window.fetch = new Proxy(window.fetch, {
+      apply(target, thisArg, args) {
+        if (args[0].includes('/login')) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ success: true, token: 'guest-token', user: { phone: 'guest' } })
+          });
+        }
+        return Reflect.apply(target, thisArg, args);
+      }
+    });
+  </script>
+
+  <script src="2.9c540744.chunk.js"></script>
+  <script src="main.abe8dc55.chunk.js"></script>
+</body>
+</html>
